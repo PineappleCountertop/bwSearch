@@ -1,0 +1,33 @@
+#!/bin/bash
+export BW_SESSION="I3J/FBkJVUwu+Aa2vRBuHZYxZ66kGKJ4TQa2km3JhxI9WfSLRMl2Ew0BxlNMrGMMGxfqH56MYEc5pW+xszGZww=="
+[[ $# -eq 0 ]] && query=$(zenity --entry --text="Sito" --entry-text="git..") || query=$@
+usersdmenu=""
+userssplit=""
+passwords=""
+json=$(bw list items --search $query)
+length=$(bw list items --search $query | jq -r 'length')
+for row in $(echo "${json}" | jq -r '.[] | @base64'); do
+    _jq() {
+     echo ${row} | base64 --decode | jq -r ${1}
+    }
+
+	# echo $(_jq '.login.username')
+	user="$(echo $(_jq '.login.username'))"
+	usersdmenu="$usersdmenu$user\n"
+	userssplit="$userssplit$user,"
+	password="$(_jq '.login.password')"
+	passwords="$passwords$password,"
+done
+IFS=","
+read -r -a usersarray <<< "$userssplit"
+read -r -a passwordsarray <<< "$passwords"
+unset IFS
+
+[[ $length -eq 1 ]] && scelta=${usersarray[0]} || scelta="$(echo -e $usersdmenu | dmenu)"
+
+
+for index in "${!usersarray[@]}"
+do
+    # echo "$index ${sarray[index]}"
+    [[ ${usersarray[index]} = $scelta ]] && echo "${passwordsarray[index]}" | xclip -selection c && notify-send Found "copied to clipboard password of user:${usersarray[index]}, site:$query"
+done
