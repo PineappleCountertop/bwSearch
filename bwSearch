@@ -1,13 +1,18 @@
 #!/bin/bash
-export BW_SESSION="I3J/FBkJVUwu+Aa2vRBuHZYxZ66kGKJ4TQa2km3JhxI9WfSLRMl2Ew0BxlNMrGMMGxfqH56MYEc5pW+xszGZww=="
-[[ $# -eq 0 ]] && query=$(zenity --entry --text="Sito" --entry-text="git..") || query=$@
+export BW_SESSION = your token here
+
+# [[ $# -eq 0 ]] && query=$(zenity --entry --text="Site" --entry-text="git..") || query=$@
+[[ $# -eq 0 ]] && query=$(echo -e "\n" | dmenu -p "What to search:") || query=$@
+# the query is passed through parameters, if not it's asked through a text-box
+
 usersdmenu=""
 userssplit=""
 passwords=""
-json=$(bw list items --search $query)
-length=$(bw list items --search $query | jq -r 'length')
+
+json=$(bw list items --search $query) 
+length=$(echo $json | jq -r 'length') #how many accounts found for that site
 for row in $(echo "${json}" | jq -r '.[] | @base64'); do
-    _jq() {
+    _jq() {	#this function is used to loop through the multiple results
      echo ${row} | base64 --decode | jq -r ${1}
     }
 
@@ -23,11 +28,11 @@ read -r -a usersarray <<< "$userssplit"
 read -r -a passwordsarray <<< "$passwords"
 unset IFS
 
-[[ $length -eq 1 ]] && scelta=${usersarray[0]} || scelta="$(echo -e $usersdmenu | dmenu)"
-
+[[ $length -eq 1 ]] && chosen=${usersarray[0]} || chosen="$(echo -e $usersdmenu | dmenu)"
+# if there is only one result just copy the password of that account to the clipboard 
 
 for index in "${!usersarray[@]}"
 do
     # echo "$index ${sarray[index]}"
-    [[ ${usersarray[index]} = $scelta ]] && echo "${passwordsarray[index]}" | xclip -selection c && notify-send Found "copied to clipboard password of user:${usersarray[index]}, site:$query"
+    [[ ${usersarray[index]} = $chosen ]] && echo "${passwordsarray[index]}" | xclip -selection c && notify-send Found "copied to clipboard password of user:${usersarray[index]}, site:$query"
 done
