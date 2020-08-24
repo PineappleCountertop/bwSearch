@@ -10,7 +10,6 @@ Download the file, make it executable (`chmod +x /path/to/bwSearch`), run, enjoy
 * bitwarden-cli
 * dmenu
 * jq
-* zenity
 
 ## TODO
 * use only one between dmenu and zenity for the input of the domain and for the selection of one between multiple logins on the same domain
