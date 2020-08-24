@@ -2,7 +2,9 @@
 Bash script that copies passwords into the clipboard from the bitwarden-cli
 
 ## Installation
-Download the file, make it executable (`chmod +x /path/to/bwSearch`), run, enjoy
+Download the file, make it executable (`chmod +x /path/to/bwSearch`)
+Unlock your bitwarden-cli instance, copy the BW_SESSION token in the script
+save and run
 
 ## Usage
 `bwSearch name_of_the_website`
