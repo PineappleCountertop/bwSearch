@@ -1,7 +1,6 @@
 #!/bin/bash
 export BW_SESSION = your token here
 
-# [[ $# -eq 0 ]] && query=$(zenity --entry --text="Site" --entry-text="git..") || query=$@
 [[ $# -eq 0 ]] && query=$(echo -e "\n" | dmenu -p "What to search:") || query=$@
 # the query is passed through parameters, if not it's asked through a text-box
 
@@ -12,14 +11,15 @@ passwords=""
 json=$(bw list items --search $query) 
 length=$(echo $json | jq -r 'length') #how many accounts found for that site
 for row in $(echo "${json}" | jq -r '.[] | @base64'); do
-    _jq() {	#this function is used to loop through the multiple results
+    _jq() {									#this function is used to loop through the multiple results
      echo ${row} | base64 --decode | jq -r ${1}
     }
 
 	# echo $(_jq '.login.username')
 	user="$(echo $(_jq '.login.username'))"
-	usersdmenu="$usersdmenu$user\n"
-	userssplit="$userssplit$user,"
+	usersdmenu="$usersdmenu$user\n" 		#array used for the choosing phase in dmenu
+	userssplit="$userssplit$user,"			#array used for extracting the password from the json
+	
 	password="$(_jq '.login.password')"
 	passwords="$passwords$password,"
 done
