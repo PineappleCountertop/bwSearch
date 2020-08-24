@@ -6,10 +6,13 @@ Download the file, make it executable (`chmod +x /path/to/bwSearch`), run, enjoy
 
 ## Usage
 `bwSearch name_of_the_website`
+or
+`bwSearch username`
 ## Requirements
 * bitwarden-cli
 * dmenu
 * jq
+* xclip
 
 ## TODO
 * use only one between dmenu and zenity for the input of the domain and for the selection of one between multiple logins on the same domain
