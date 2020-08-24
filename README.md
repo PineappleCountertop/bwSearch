@@ -15,5 +15,5 @@ or
 * xclip
 
 ## TODO
-* use only one between dmenu and zenity for the input of the domain and for the selection of one between multiple logins on the same domain
+<s>* use only one between dmenu and zenity for the input of the domain and for the selection of one between multiple logins on the same domain</s>
 * Clear the clipboard after some amount of time (a minute)
