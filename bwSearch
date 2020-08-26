@@ -1,5 +1,7 @@
 #!/bin/bash
-export BW_SESSION = your token here
+# export BW_SESSION = your token here
+export BW_SESSION="your token here"
+
 
 [[ $# -eq 0 ]] && query=$(echo -e "\n" | dmenu -p "What to search:") || query=$@
 # the query is passed through parameters, if not it's asked through a text-box
@@ -10,6 +12,7 @@ passwords=""
 
 json=$(bw list items --search $query) 
 length=$(echo $json | jq -r 'length') #how many accounts found for that site
+[[ $length -eq 0 ]] && notify-send Error "No entry found, retry with a different query" && exit
 for row in $(echo "${json}" | jq -r '.[] | @base64'); do
     _jq() {									#this function is used to loop through the multiple results
      echo ${row} | base64 --decode | jq -r ${1}
