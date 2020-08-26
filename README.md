@@ -15,6 +15,7 @@ or
 * dmenu
 * jq
 * xclip
+* notify-send
 
 ## TODO
 <s>* use only one between dmenu and zenity for the input of the domain and for the selection of one between multiple logins on the same domain</s>
